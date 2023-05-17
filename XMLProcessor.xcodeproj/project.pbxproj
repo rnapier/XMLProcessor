@@ -14,6 +14,7 @@
 		44EFD5032A13011300239BC1 /* XMLProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EFD5022A13011300239BC1 /* XMLProcessor.swift */; };
 		44EFD5052A141BE700239BC1 /* MarkdownView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EFD5042A141BE700239BC1 /* MarkdownView.swift */; };
 		44EFD5072A144EDD00239BC1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 44EFD5062A144EDD00239BC1 /* README.md */; };
+		FBACDB672A148BF600C341B3 /* RNXML in Frameworks */ = {isa = PBXBuildFile; productRef = FBACDB662A148BF600C341B3 /* RNXML */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FBACDB672A148BF600C341B3 /* RNXML in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,6 +94,9 @@
 			dependencies = (
 			);
 			name = XMLProcessor;
+			packageProductDependencies = (
+				FBACDB662A148BF600C341B3 /* RNXML */,
+			);
 			productName = XMLProcessor;
 			productReference = 44EFD4F12A1300F700239BC1 /* XMLProcessor.app */;
 			productType = "com.apple.product-type.application";
@@ -120,6 +125,9 @@
 				Base,
 			);
 			mainGroup = 44EFD4E82A1300F700239BC1;
+			packageReferences = (
+				FBACDB652A148BF600C341B3 /* XCRemoteSwiftPackageReference "RNXML" */,
+			);
 			productRefGroup = 44EFD4F22A1300F700239BC1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -351,6 +359,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		FBACDB652A148BF600C341B3 /* XCRemoteSwiftPackageReference "RNXML" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rnapier/RNXML";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FBACDB662A148BF600C341B3 /* RNXML */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBACDB652A148BF600C341B3 /* XCRemoteSwiftPackageReference "RNXML" */;
+			productName = RNXML;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 44EFD4E92A1300F700239BC1 /* Project object */;
 }

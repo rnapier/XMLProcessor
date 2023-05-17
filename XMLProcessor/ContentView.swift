@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import RNXML
 
 struct Entry: Hashable {
 	var title: String
@@ -41,54 +42,30 @@ struct ContentView: View {
 				Task {
 					let url = URL(string: "https://daringfireball.net/feeds/main")!
 					if let (xml, _) = try? await URLSession.shared.data(from: url) {
-						let processor = XMLProcessor()
-						if let object = processor.parse(data: xml, debug: false) {
-							
-							// NOTE: At this point, the object can be turned into JSON with:
-							if let data = try? JSONSerialization.data(withJSONObject: object, options: [.prettyPrinted]) {
-								if let debug = String(data: data, encoding: .utf8) {
-									print(debug)
-								}
-							}
+                        let document = try RNXMLParser().parse(data: xml)
 
-							// NOTE: It sure would be nice to have an easy way to unbox the feed Dictionary with a Decoder,
-							// but there isn't, so we'll just poke around in the data and unbox the values ourself.
-							if let feed = object["feed"] as? Dictionary<String,Any> {
-								if let entries = feed["entry"] as? Array<Any> {
-									self.entries = entries.compactMap({ element in
-										if let entry = element as? Dictionary<String,Any> {
-											if let title = entry["title"] as? String,
-											   let published = entry["published"] as? String,
-											   let linkAttributes = entry["link$attrs"] as? Array<Any> {
-												var relatedLink: String?
-												var alternateLink: String?
-												for linkAttribute in linkAttributes	{
-													if let dictionary = linkAttribute as? Dictionary<String,Any> {
-														if let linkRelationship = dictionary["rel"] as? String {
-															if linkRelationship == "related" {
-																if let linkValue = dictionary["href"] as? String {
-																	relatedLink = linkValue
-																}
-															}
-															else if linkRelationship == "alternate" {
-																if let linkValue = dictionary["href"] as? String {
-																	alternateLink = linkValue
-																}
-															}
-														}
-													}
-												}
-												let link = relatedLink ?? alternateLink ?? "https://daringfireball.net"
-												if let date = ISO8601DateFormatter().date(from: published) {
-													return Entry(title: title, date: date, link: link)
-												}
-											}
-										}
-										return nil
-									})
-								}
-							}
-						}
+                        let feed = try document["feed"]
+                        self.entries = try feed[all: "entry"].compactMap { entry in
+                            let title = try entry["title"].text
+                            let published = try entry["published"].text
+
+                            let links = entry[all: "link"].compactMap { entry in
+                                if let relation = entry.attributes["rel"], relation == "related" || relation == "alternate",
+                                   let href = entry.attributes["href"] {
+                                    return (relation: relation, href: href)
+                                } else {
+                                    return nil
+                                }
+                            }
+
+                            let link = links.first(where: { $0.relation == "related"} )?.href ?? links.first(where: { $0.relation == "alternate"} )?.href ?? "https://daringfireball.net"
+
+                            if let date = ISO8601DateFormatter().date(from: published) {
+                                return Entry(title: title, date: date, link: link)
+                            }
+
+                            return nil
+                        }
 					}
 				}
 			}

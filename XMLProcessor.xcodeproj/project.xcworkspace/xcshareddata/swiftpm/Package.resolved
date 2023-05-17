@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "rnxml",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rnapier/RNXML",
+      "state" : {
+        "branch" : "main",
+        "revision" : "85510e05129a91ae66a38a5dbe5bd178d8b8e6cb"
+      }
+    }
+  ],
+  "version" : 2
+}
